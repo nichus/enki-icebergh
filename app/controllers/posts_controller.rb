@@ -5,7 +5,7 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.atom { render :layout => false }
+      format.atom { render :content_type => 'application/atom+xml', :layout => false }
     end
   end
 

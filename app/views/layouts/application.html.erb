@@ -1,25 +1,29 @@
-<!DOCTYPE html>
-<html dir="ltr" lang="en-US">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en">
 <head>
   <meta charset="utf-8">
   <title><%= html_title yield(:page_title) %></title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <%= csrf_meta_tag %>
-  <%= stylesheet_link_tag 'application' %>
+  <%= stylesheet_link_tag 'the-grid' %>
+  <!--%= stylesheet_link_tag 'application' %-->
   <%= javascript_include_tag 'jquery' %>
   <%= javascript_include_tag 'rails' %>
   <%= open_id_delegation_link_tags(enki_config[:open_id_delegation, :server], enki_config[:open_id_delegation, :delegate]) if enki_config[:open_id_delegation] %>
   <%= yield(:head) %>
 </head>
 <body>
-  <div id="page_container">
-    <div id="content">
-      <h1 id="page_heading"><a href="<%= root_url %>"><%= enki_config[:title] %></a></h1>
-
-      <div id="main">
-        <%= yield %>
+  <div id="width960">
+    <div id="header" class="row">
+      <div class="col c12">
+        <h1><a href="<%= root_url %>"><%= enki_config[:title] %></a></h1>
+        <p class="slogan">Everything you always knew you'd never want</p>
+        <p><a href="<%= root_url %>"><img src="/images/grid/header_muddy.jpg" alt="Banner" /></a></p>
       </div>
+    </div>
 
-      <div id="navigation">
+    <div class="row">
+      <div id="sidebar" class="col c3">
         <h2>Pages</h2>
         <ul>
           <% page_links_for_navigation.each do |link| -%>
@@ -34,17 +38,26 @@
             <% end -%>
           </ul>
         <% end -%>
-        <form method="get" id="sform" action="http://www.google.com/search">
+        <form method="get" id="sform" class="searchform" action="http://www.google.com/search">
           <div>
-            <h2><label for="q">Search</label></h2>
-
-            <input type="text" id="q" value="" name="q">
+            <input type="text" class="searchfield" id="q" value="Search..." name="q" onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value=='') {this.value='Search...';}" />
+	    <input class="searchbutton" type="button" value="Go" />
             <input type="hidden" name="sitesearch" value="<%= enki_config[:url] %>">
           </div>
         </form>
       </div>
 
-      <div id="footer"><%= enki_config[:title] %> &#169; <%= enki_config[:author, :name] %>. Valid <a href="http://validator.w3.org/check?uri=referer">HTML5</a> and <%= link_to "ATOM", "http://feedvalidator.org/check.cgi?url=#{enki_config[:url]}/posts.atom" %>. Powered by <a href="http://www.enkiblog.com" title="A Ruby on Rails blogging app for the fashionable developer">Enki</a>.</div>
+      <div id="content" class="col c9">
+        <%= yield %>
+      </div>
+    </div>
+
+    <div id="footer" class="row">
+      <div class="col c12">
+        <p><%= enki_config[:title] %> &#169; 2011 <%= enki_config[:author, :name] %>.<br />
+        Valid <a href="http://validator.w3.org/check?uri=referer">HTML5</a> and <%= link_to "ATOM", "http://feedvalidator.org/check.cgi?url=#{enki_config[:url]}/posts.atom" %>. Powered by <a href="http://www.enkiblog.com" title="A Ruby on Rails blogging app for the fashionable developer">Enki</a>.<br />
+        <a href="http://andreasviklund.com/templates/the-grid/">Template design</a> by <a href="http://andreasviklund.com/">Andreas Viklund</a></p>
+      </div>
     </div>
   </div>
 </body>
