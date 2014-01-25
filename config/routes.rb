@@ -1,5 +1,5 @@
 Enki::Application.routes.draw do
-  namespace 'admin' do
+  namespace :admin do
     resource :session
 
     resources :posts, :pages do
@@ -10,7 +10,7 @@ Enki::Application.routes.draw do
       post 'undo', :on => :member
     end
 
-    match 'health(/:action)' => 'health', :action => 'index', :as => :health
+    get 'health(/:action)' => 'health', :action => 'index', :as => :health
 
     root :to => 'dashboard#show'
   end
@@ -27,7 +27,7 @@ Enki::Application.routes.draw do
 
   scope :to => 'posts#index' do
     get 'posts.:format', :as => :formatted_posts
-    get '(:tag)', :as => :posts
+    get '(:tag)', :as => :posts, :tag => /(?:[A-Za-z0-9_ \.-]|%20)+?/, :format => /html|atom/
   end
 
   root :to => 'posts#index'

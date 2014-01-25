@@ -42,11 +42,16 @@ describe Comment do
     @comment.should be_valid
   end
 
-  it "requires OpenID authentication when the author's name contains a period" do
+  it "requires OpenID authentication when the author's name looks like a url" do
     @comment.author = "Don Alias"
     @comment.requires_openid_authentication?.should == false
     @comment.author = "enkiblog.com"
     @comment.requires_openid_authentication?.should == true
+  end
+
+  it "doesn't require auth just because the author's name contains a dot" do
+    @comment.author = "Dr. Alias"
+    @comment.requires_openid_authentication?.should == false
   end
 
   it "requires OpenID authentication when the author's name starts with http" do
@@ -115,8 +120,8 @@ end
 describe Comment, '.find_recent' do
   it 'finds the most recent comments that were posted before now' do
     now = Time.now
-    Time.stub!(:now).and_return(now)
-    Comment.should_receive(:find).with(:all, {
+    Time.stub(:now).and_return(now)
+    Comment.should_receive(:all).with({
       :order      => 'created_at DESC',
       :limit      => Comment::DEFAULT_LIMIT
     }).and_return(comments = [mock_model(Comment)])
@@ -124,7 +129,7 @@ describe Comment, '.find_recent' do
   end
 
   it 'allows and override of the default limit' do
-    Comment.should_receive(:find).with(:all, hash_including(:limit => 999))
+    Comment.should_receive(:all).with(hash_including(:limit => 999))
     Comment.find_recent(:limit => 999)
   end
 end
@@ -174,7 +179,7 @@ describe Comment, '.build_for_preview with OpenID author' do
 end
 
 describe Comment, '#requires_openid_authentication?' do
-  describe 'with an author containing a .' do
+  describe 'with an author that looks like a url' do
     subject { Comment.new(:author => 'example.com').requires_openid_authentication? }
 
       it { should be }

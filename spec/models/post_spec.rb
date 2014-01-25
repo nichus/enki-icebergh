@@ -16,7 +16,7 @@ end
 describe Post, ".find_recent" do
   it 'finds the most recent posts that were published before now' do
     now = Time.now
-    Time.stub!(:now).and_return(now)
+    Time.stub(:now).and_return(now)
     Post.should_receive(:find).with(:all, {
       :order      => 'posts.published_at DESC',
       :conditions => ['published_at < ?', now],
@@ -27,7 +27,7 @@ describe Post, ".find_recent" do
 
   it 'finds the most recent posts that were published before now with a tag' do
     now = Time.now
-    Time.stub!(:now).and_return(now)
+    Time.stub(:now).and_return(now)
     Post.should_receive(:find_tagged_with).with('code', {
       :order      => 'posts.published_at DESC',
       :conditions => ['published_at < ?', now],
@@ -38,7 +38,7 @@ describe Post, ".find_recent" do
 
   it 'finds all posts grouped by month' do
     now = Time.now
-    Time.stub!(:now).and_return(now)
+    Time.stub(:now).and_return(now)
     posts = [1, 1, 2].collect {|month| mock_model(Post, :month => month) }
     Post.should_receive(:find).with(:all, {
       :order      => 'posts.published_at DESC',
@@ -76,10 +76,16 @@ describe Post, '#generate_slug' do
 end
 
 describe Post, '#tag_list=' do
-  it 'accept an array argument so it is symmetrical with the reader' do
+  it 'accepts an array argument so it is symmetrical with the reader' do
     p = Post.new
     p.tag_list = ["a", "b"]
     p.tag_list.should == ["a", "b"]
+  end
+
+  it 'filters the tag list and keeps only alphanumeric, underscore, space, dot and dash characters' do
+    p = Post.new
+    p.tag_list = 'square, triangle, oblong, whacky-& $#*wild-1.0'
+    p.tag_list.should == ['square', 'triangle', 'oblong', 'whacky-and wild-1.0']
   end
 end
 
@@ -87,10 +93,10 @@ describe Post, "#set_dates" do
   describe 'when minor_edit is false' do
     it 'sets edited_at to current time' do
       now = Time.now
-      Time.stub!(:now).and_return(now)
+      Time.stub(:now).and_return(now)
 
       post = Post.new(:edited_at => 1.day.ago)
-      post.stub!(:minor_edit?).and_return(false)
+      post.stub(:minor_edit?).and_return(false)
       post.set_dates
       post.edited_at.should == now
     end
@@ -99,10 +105,10 @@ describe Post, "#set_dates" do
   describe 'when edited_at is nil' do
     it 'sets edited_at to current time' do
       now = Time.now
-      Time.stub!(:now).and_return(now)
+      Time.stub(:now).and_return(now)
 
       post = Post.new
-      post.stub!(:minor_edit?).and_return(true)
+      post.stub(:minor_edit?).and_return(true)
       post.set_dates
       post.edited_at.should == now
     end
@@ -111,7 +117,7 @@ describe Post, "#set_dates" do
   describe 'when minor_edit is true' do
     it 'does not changed edited_at' do
       post = Post.new(:edited_at => now = 1.day.ago)
-      post.stub!(:minor_edit?).and_return(true)
+      post.stub(:minor_edit?).and_return(true)
       post.set_dates
       post.edited_at.should == now
     end
@@ -123,6 +129,29 @@ describe Post, "#set_dates" do
     Chronic.should_receive(:parse).with('now').and_return(now)
     post.set_dates
     post.published_at.should == now
+  end
+
+  it 'does not set published_at if published_at_natural is invalid' do
+    pub = 1.day.ago
+    post = Post.new(:published_at_natural => 'bogus', :published_at => pub)
+    Chronic.should_receive(:parse).with('bogus').and_return(nil)
+    post.set_dates
+    post.published_at.should == pub
+  end
+
+  it 'preserves published_at if published_at_natural is nil' do
+    pub = 1.day.ago
+    post = Post.new(:published_at_natural => nil, :published_at => pub)
+    post.set_dates
+    # Some rounding/truncating is acceptable...
+    post.published_at.should be_within(60.seconds).of(pub)
+  end
+
+  it 'clears published_at if published_at_natural is empty' do
+    pub = 1.day.ago
+    post = Post.new(:published_at_natural => '', :published_at => pub)
+    post.set_dates
+    post.published_at.should == nil
   end
 end
 
@@ -159,7 +188,9 @@ describe Post, 'before validation' do
   end
 
   it 'calls #set_dates' do
-    post = Post.new(:title => "My Post", :body => "body")
+    post = Post.new(:title => "My Post",
+                    :body => "body",
+                    :published_at_natural => 'now')
     post.valid?
     post.edited_at.should_not be_blank
     post.published_at.should_not be_blank
@@ -170,7 +201,7 @@ describe Post, '#denormalize_comments_count!' do
   it 'updates approved_comments_count without triggering AR callbacks' do
     p = Post.new
     p.id = 999
-    p.stub!(:approved_comments).and_return(stub("approved_comments association", :count => 9))
+    p.stub(:approved_comments).and_return(double("approved_comments association", :count => 9))
     Post.should_receive(:update_all).with(["approved_comments_count = ?", 9], ["id = ?", 999])
     p.denormalize_comments_count!
   end
@@ -211,7 +242,10 @@ end
 
 describe Post, '.build_for_preview' do
   before(:each) do
-    @post = Post.build_for_preview(:title => 'My Post', :body => "body", :tag_list => "ruby")
+    @post = Post.build_for_preview(:title => 'My Post',
+                                   :body => "body",
+                                   :tag_list => "ruby",
+                                   :published_at_natural => 'now')
   end
 
   it 'returns a new post' do

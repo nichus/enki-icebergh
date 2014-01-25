@@ -1,8 +1,7 @@
 class Tag < ActiveRecord::Base
   has_many                :taggings, :dependent => :destroy
 
-  validates_presence_of   :name
-  validates_uniqueness_of :name
+  validates               :name, :presence => true, :uniqueness => true
 
   # TODO: Contribute this back to acts_as_taggable_on_steroids plugin
   # Update taggables' cached_tag_list
@@ -21,7 +20,7 @@ class Tag < ActiveRecord::Base
 
   # LIKE is used for cross-database case-insensitivity
   def self.find_or_create_with_like_by_name(name)
-    find(:first, :conditions => ["name LIKE ?", name]) || create(:name => name)
+    where('name LIKE ?', name).first || create(:name => name)
   end
 
   def ==(object)
@@ -34,5 +33,11 @@ class Tag < ActiveRecord::Base
 
   def count
     read_attribute(:count).to_i
+  end
+
+  def self.filter_name(tag_name)
+    tag_name.gsub!('&', 'and')               # Replace & with 'and'.
+    tag_name.gsub!(/[^A-Za-z0-9_ \.-]/, '')  # Get rid of anything other than these allowed characters.
+    tag_name
   end
 end

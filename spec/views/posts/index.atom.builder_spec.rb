@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe "/posts/index.atom.builder" do
   before(:each) do
-    view.stub!(:enki_config).and_return(Enki::Config.default)
+    view.stub(:enki_config).and_return(Enki::Config.default)
 
     mock_tag = mock_model(Tag,
       :name => 'code'
@@ -22,11 +22,11 @@ describe "/posts/index.atom.builder" do
   end
 
   it "should render list of posts" do
-    render :template => "/posts/index.atom.builder"
+    render :template => "/posts/index", :formats => [:atom], :handler => [:builder]
   end
 
   it "should render list of posts with a tag" do
     assigns[:tag] = 'code'
-    render :template => "/posts/index.atom.builder"
+    render :template => "/posts/index", :formats => [:atom], :handler => [:builder]
   end
 end
