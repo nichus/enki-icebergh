@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20110709024316) do
   end
 
   add_index "pages", ["created_at"], name: "index_pages_on_created_at"
-  add_index "pages", ["slug"], name: "pages_slug_unique_idx"
+  add_index "pages", ["slug"], name: "pages_slug_unique_idx", unique: true
   add_index "pages", ["title"], name: "index_pages_on_title"
 
   create_table "posts", force: true do |t|
