@@ -14,6 +14,7 @@
   <!--%= stylesheet_link_tag 'application' %-->
   <%= javascript_include_tag 'jquery' %>
   <%= javascript_include_tag 'application' %>
+  <script src="//use.edgefonts.net/acme:n4:all;paytone-one:n4:all;rosario:n4,i4,n7,i7:all.js"></script>
   <%= open_id_delegation_link_tags(enki_config[:open_id_delegation, :server], enki_config[:open_id_delegation, :delegate]) if enki_config[:open_id_delegation] %>
   <%= yield(:head) %>
 </head>
