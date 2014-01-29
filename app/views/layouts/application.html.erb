@@ -10,9 +10,9 @@
   <meta itemprop="description" content="All the things you always knew you never wanted" />
   <%= csrf_meta_tag %>
   <%= stylesheet_link_tag 'the-grid' %>
+  <%= stylesheet_link_tag 'search' %>
   <!--%= stylesheet_link_tag 'application' %-->
   <%= javascript_include_tag 'jquery' %>
-  <%= javascript_include_tag 'rails' %>
   <%= javascript_include_tag 'application' %>
   <%= open_id_delegation_link_tags(enki_config[:open_id_delegation, :server], enki_config[:open_id_delegation, :delegate]) if enki_config[:open_id_delegation] %>
   <%= yield(:head) %>
@@ -20,10 +20,17 @@
 <body>
   <div id="width960">
     <div id="header" class="row">
-      <div class="col c12">
+      <div class="col c12" style="position: relative;">
         <h1><a href="<%= root_url %>"><%= enki_config[:title] %></a></h1>
         <p class="slogan">Everything you always knew you'd never want</p>
-        <p><a href="<%= root_url %>"><img src="/images/grid/header_muddy.jpg" alt="Banner" /></a></p>
+	<form method="get" id="sform" class="searchform" action="http://www.google.com/search">
+	  <div>
+	    <input type="text" class="searchfield" id="q" value="Search..." name="q" onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value=='') {this.value='Search...';}" />
+	    <input class="searchbutton" type="button" value="Go" />
+	    <input type="hidden" name="sitesearch" value="<%= enki_config[:url] %>">
+	  </div>
+	</form>
+        <div><a href="<%= root_url %>"><img src="/images/grid/header_muddy.jpg" alt="Banner" /></a></div>
       </div>
     </div>
 
@@ -43,13 +50,6 @@
             <% end -%>
           </ul>
         <% end -%>
-        <form method="get" id="sform" class="searchform" action="http://www.google.com/search">
-          <div>
-            <input type="text" class="searchfield" id="q" value="Search..." name="q" onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value=='') {this.value='Search...';}" />
-	    <input class="searchbutton" type="button" value="Go" />
-            <input type="hidden" name="sitesearch" value="<%= enki_config[:url] %>">
-          </div>
-        </form>
       </div>
 
       <div id="content" class="col c9">
