@@ -2,6 +2,7 @@
   <div class="col c9">
     <h2><%= link_to(post.title, post_path(post)) %></h2>
     <div class="entrybody">
+      <%=raw post.intro_html %>
       <%=raw post.body_html %>
     </div>
     <div class="meta">

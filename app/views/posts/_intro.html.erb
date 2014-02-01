@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col c9">
+    <h2><%= link_to(intro.title, post_path(intro)) %></h2>
+    <div class="entrybody">
+      <%=raw intro.intro_html %>
+    </div>
+    <div class="meta">
+      <ul>
+	<li class="date">Posted on <%= format_post_date(intro.published_at) %></li>
+	<li class="comments"><%= link_to_post_comments intro %></li>
+	<li class="comments"><%= link_to(pluralize(intro.approved_comments.size, "comment"), post_path(intro, :anchor => 'comments')) %></li>
+  <li class="comments"><g:plusone size="small"></g:plusone></li>
+	<% unless intro.tags.empty? -%>
+	<li class="tags">Tagged <%= linked_tag_list(intro.tags) %></li>
+	<% end -%>
+      </ul>
+    </div>
+  </div>
+</div>
