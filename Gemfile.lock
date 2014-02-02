@@ -124,6 +124,8 @@ GEM
       railties (>= 4.0.0.beta, < 5.0)
       sass (>= 3.1.10)
       sprockets-rails (~> 2.0.0)
+    sitemap_generator (4.3.1)
+      builder
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -176,6 +178,7 @@ DEPENDENCIES
   rspec-rails
   ruby-openid
   sass-rails
+  sitemap_generator
   sqlite3
   trinidad
   webrat

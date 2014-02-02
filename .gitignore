@@ -2,6 +2,7 @@ log/**/*
 log
 tmp/**/*
 tmp
+public/sitemap.xml.gz
 config/database.yml
 .bundle
 *.log
