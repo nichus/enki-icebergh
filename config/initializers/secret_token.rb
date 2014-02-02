@@ -7,10 +7,10 @@ else
   # If you change this key, all old signed cookies will become invalid!
   # Make sure the secret is at least 30 characters and all random,
   # no regular words or you'll be exposed to dictionary attacks.
-  raise "Generate a secret with `rake secret` and paste it into `config/initializers/secret_token.rb`."
+  # raise "Generate a secret with `rake secret` and paste it into `config/initializers/secret_token.rb`."
 
   # If this is an open source project, DO NOT commit your secret to source
   # control. Load it from ENV or a file that is git ignored (File.read)
-  Enki::Application.config.secret_token    = 'paste your token here' # To be removed in the next version of Enki
-  Enki::Application.config.secret_key_base = 'paste your token here'
+  Enki::Application.config.secret_token    = File.new('config/initializers/secret_token.txt').read
+  Enki::Application.config.secret_key_base = File.new('config/initializers/secret_token.txt').read
 end

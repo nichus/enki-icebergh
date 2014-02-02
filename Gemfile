@@ -11,6 +11,7 @@ gem 'sass-rails'
 
 platforms :ruby do
   gem 'sqlite3'
+  gem 'mysql2'
 end
 
 platforms :jruby do
