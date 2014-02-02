@@ -1,17 +1,25 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en" itemscope itemtype="http://schema.org/Blog">
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 
   <title><%= html_title yield(:page_title) %></title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta itemprop="name" content="Icebergh Blog" />
+  <meta itemprop="name" content="<%= html_title yield(:page_title) %>" />
   <meta itemprop="image" content="http://icebergh.us/images/google_thumbnail.jpg" />
-  <meta itemprop="description" content="All the things you always knew you never wanted" />
+  <meta itemprop="description" content="<%= enki_config[:slogan] %>" />
   <%= csrf_meta_tag %>
-  <%= stylesheet_link_tag 'the-grid' %>
+  <!--%= stylesheet_link_tag 'the-grid' %-->
+  <%= stylesheet_link_tag 'normalize' %>
+  <%= stylesheet_link_tag 'main' %>
   <%= stylesheet_link_tag 'search' %>
   <!--%= stylesheet_link_tag 'application' %-->
+  <%= javascript_include_tag 'modernizr-2.6.2-respond-1.1.0.min.js' %>
   <%= javascript_include_tag 'jquery' %>
   <%= javascript_include_tag 'application' %>
   <script src="//use.edgefonts.net/acme:n4:all;paytone-one:n4:all;rosario:n4,i4,n7,i7:all.js"></script>
@@ -19,53 +27,52 @@
   <%= yield(:head) %>
 </head>
 <body>
-  <div id="width960">
-    <div id="header" class="row">
-      <div class="col c12" style="position: relative;">
-        <h1><a href="<%= root_url %>"><%= enki_config[:title] %></a></h1>
-        <p class="slogan">Everything you always knew you'd never want</p>
-	<form method="get" id="sform" class="searchform" action="http://www.google.com/search">
-	  <div>
-	    <input type="text" class="searchfield" id="q" value="Search..." name="q" onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value=='') {this.value='Search...';}" />
-	    <input class="searchbutton" type="button" value="Go" />
-	    <input type="hidden" name="sitesearch" value="<%= enki_config[:url] %>">
-	  </div>
-	</form>
-        <div><a href="<%= root_url %>"><img src="/images/grid/header_muddy.jpg" alt="Banner" /></a></div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div id="sidebar" class="col c3">
-        <h2>Pages</h2>
-        <ul>
-          <% page_links_for_navigation.each do |link| -%>
-            <li><%= link_to(link.name, link.url) %></li>
-          <% end -%>
-        </ul>
-        <% unless category_links_for_navigation.empty? -%>
-          <h2>Categories</h2>
-          <ul>
-            <% category_links_for_navigation.each do |link| -%>
-              <li><%= link_to(link.name, link.url) %></li>
-            <% end -%>
-          </ul>
-        <% end -%>
-      </div>
-
-      <div id="content" class="col c9">
-        <%= yield %>
-      </div>
-    </div>
-
-    <div id="footer" class="row">
-      <div class="col c12">
-        <p><%= enki_config[:title] %> &#169; 2011 <%= enki_config[:author, :name] %>.<br />
-        Valid <a href="http://validator.w3.org/check?uri=referer">HTML5</a> and <%= link_to "ATOM", "http://feedvalidator.org/check.cgi?url=#{enki_config[:url]}/posts.atom" %>. Powered by <a href="http://www.enkiblog.com" title="A Ruby on Rails blogging app for the fashionable developer">Enki</a>.<br />
-        <a href="http://andreasviklund.com/templates/the-grid/">Template design</a> by <a href="http://andreasviklund.com/">Andreas Viklund</a></p>
-      </div>
-    </div>
-  </div>
+	<!--[if lt IE 7]>
+		<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+	<![endif]-->
+	<div class="header-container">
+		<header class="wrapper clearfix">
+			<form method="get" id="sform" class="searchform" action="http://www.google.com/search">
+				<div>
+					<input type="text" class="searchfield" id="q" value="Search..." name="q" onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value=='') {this.value='Search...';}" />
+					<input class="searchbutton" type="button" value="Go" />
+					<input type="hidden" name="sitesearch" value="<%= enki_config[:url] %>">
+				</div>
+			</form>
+			<div>
+				<a href="<%= root_url %>"><img src="/images/grid/header_muddy.jpg" alt="Banner" /></a>
+				<h1 class="title"><a href="<%= root_url %>"><%= enki_config[:title] %></a></h1>
+				<p class="slogan"><%= enki_config[:slogan] %></p>
+			</div>
+		</header>
+	</div>
+	<div class="main-container">
+		<nav>
+			<h2>Pages</h2>
+			<ul>
+				<% page_links_for_navigation.each do |link| -%>
+					<li><%= link_to(link.name, link.url) %></li>
+				<% end -%>
+			</ul>
+			<% unless category_links_for_navigation.empty? -%>
+				<h2>Tags</h2>
+				<ul>
+					<% category_links_for_navigation.each do |link| -%>
+						<li><%= link_to(link.name, link.url) %></li>
+					<% end -%>
+				</ul>
+			<% end -%>
+		</nav>
+		<div class="main wrapper clearfix">
+<%= yield %>
+		</div>
+	</div>
+	<div class="footer-container">
+		<footer class="wrapper">
+			<p><%= enki_config[:title] %> &#169; 2014 <%= link_to enki_config[:author, :name], about_me_path %>. <a href="https://github.com/nichus"><img src="/images/GitHub-Mark-32px.png" width="20px" height="20px" /></a> <a href="https://twitter.com/nichus" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false"><img src="/images/twitter-bird-16x16.png" /></a> <br />
+			Valid <a href="http://validator.w3.org/check?uri=referer">HTML5</a> and <%= link_to "ATOM", "http://feedvalidator.org/check.cgi?url=#{enki_config[:url]}/posts.atom" %>. Powered by <a href="http://www.enkiblog.com" title="A Ruby on Rails blogging app for the fashionable developer">Enki</a>.<br />
+		</footer>
+	</div>
   <script type="text/javascript">
     (function(){
       var po=document.createElement("script"); po.type="text/javascript"; po.async=true;
@@ -73,5 +80,14 @@
       var s=document.getElementsByTagName("script")[0];  s.parentNode.insertBefore(po,s);
     })();
   </script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-47681657-1', 'icebergh.us');
+		ga('send', 'pageview');
+	</script>
 </body>
 </html>

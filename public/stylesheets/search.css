@@ -1,8 +1,8 @@
 .searchform {
   display: inline-block;
   position: absolute;
-  right: 5px;
-  bottom: 135px;
+  right: 2em;
+  top: 0.15em;
   zoom: 1; /* ie7 hack for display:inline-block */
   *display: inline;
   border: solid 1px #d2d2d2;
