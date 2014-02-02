@@ -15,6 +15,8 @@ Enki::Application.routes.draw do
     root :to => 'dashboard#show'
   end
 
+	get 'about_me', to: 'pages#about_me'
+
   resources :archives, :only => [:index]
   resources :pages, :only => [:show]
 
